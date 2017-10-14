@@ -1,0 +1,207 @@
+<div ng-controller="OurUmbraco.ProfileEditor.UserController as vm" class="clearfix">
+
+    <form name="editUserForm" novalidate val-form-manager>
+
+        <umb-editor-view>
+            <umb-editor-container>
+                <umb-load-indicator ng-if="vm.loading">
+                </umb-load-indicator>
+
+                <div ng-if="!vm.loading" class="umb-packages-view-wrapper" style="padding: 0;">
+
+                    <div class="umb-package-details">
+
+                        <div class="umb-package-details__main-content">
+
+                            <umb-box>
+
+                                <umb-box-header title-key="user_profile"></umb-box-header>
+
+                                <umb-box-content class="block-form">
+                                    <umb-control-group label="@general_name" required="true">
+
+                                        <input type="text"
+                                               localize="placeholder"
+                                               placeholder="@placeholders_name"
+                                               class="input-block-level"
+                                               ng-model="vm.user.name"
+                                               umb-auto-focus name="name"
+                                               required
+                                               val-server-field="Name" />
+                                        <span class="help-inline" val-msg-for="name" val-toggle-msg="required"><localize key="general_required">Required</localize></span>
+                                        <span class="help-inline" val-msg-for="name" val-toggle-msg="valServerField"></span>
+                                    </umb-control-group>
+
+                                    <umb-control-group label="@general_email" required="true">
+
+                                        <input type="email"
+                                               localize="placeholder"
+                                               placeholder="@placeholders_enteremail"
+                                               class="input-block-level"
+                                               ng-model="vm.user.email"
+                                               umb-auto-focus name="email"
+                                               val-email
+                                               required
+                                               val-server-field="Email" />
+                                        <span class="help-inline" val-msg-for="email" val-toggle-msg="required"><localize key="general_required">Required</localize></span>
+                                        <span class="help-inline" val-msg-for="email" val-toggle-msg="valServerField"></span>
+                                    </umb-control-group>
+
+                                    <umb-control-group label="@general_username" ng-if="!vm.usernameIsEmail" required="true">
+                                        <input type="text"
+                                               localize="placeholder"
+                                               placeholder="@placeholders_enterusername"
+                                               class="input-block-level"
+                                               ng-model="vm.user.username"
+                                               umb-auto-focus name="username"
+                                               required
+                                               val-server-field="Username" />
+                                        <span class="help-inline" val-msg-for="username" val-toggle-msg="required"><localize key="general_required">Required</localize></span>
+                                        <span class="help-inline" val-msg-for="username" val-toggle-msg="valServerField"></span>
+                                    </umb-control-group>
+
+                                    <umb-control-group label="@user_language" description="@user_languageHelp">
+                                        <select class="input-block-level"
+                                                ng-model="vm.user.culture"
+                                                ng-options="key as value for (key, value) in vm.user.availableCultures"
+                                                name="culture"
+                                                required
+                                                val-server-field="Culture"></select>
+                                        <span class="help-inline" val-msg-for="culture" val-toggle-msg="required"><localize key="general_required">Required</localize></span>
+                                        <span class="help-inline" val-msg-for="culture" val-toggle-msg="valServerField"></span>
+                                    </umb-control-group>
+                                </umb-box-content>
+                            </umb-box>
+
+                            <umb-box>
+                                <umb-box-header title-key="general_groups"></umb-box-header>
+                                <umb-box-content class="block-form">
+
+                                    <umb-control-group style="margin-bottom: 25px;">
+                                        <umb-user-group-preview ng-repeat="userGroup in vm.user.userGroups"
+                                                                icon="userGroup.icon"
+                                                                name="userGroup.name">
+                                        </umb-user-group-preview>
+                                    </umb-control-group>
+                                </umb-box-content>
+                            </umb-box>
+                        </div>
+
+                        <div class="umb-package-details__sidebar">
+
+                            <div class="umb-package-details__section">
+
+                                <!-- Avatar -->
+                                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #d8d7d9;">
+                                    <ng-form name="avatarForm" class="flex flex-column justify-center items-center">
+
+                                        <umb-avatar style="margin-bottom: 15px;"
+                                                    color="secondary"
+                                                    size="xxl"
+                                                    name="{{vm.user.name}}"
+                                                    img-src="{{vm.user.avatars[3]}}"
+                                                    img-srcset="{{vm.user.avatars[4]}} 2x, {{vm.user.avatars[4]}} 3x">
+                                        </umb-avatar>
+
+                                        <umb-progress-bar style="max-width: 120px;"
+                                                          ng-if="vm.avatarFile.uploadStatus === 'uploading'"
+                                                          progress="{{ vm.avatarFile.uploadProgress }}"
+                                                          size="s">
+                                        </umb-progress-bar>
+
+                                        <div class="flex items-center" ng-if="vm.avatarFile.uploadStatus !== 'uploading'">
+
+                                            <a href=""
+                                               class="umb-user-group-preview__action"
+                                               ngf-select ng-model="filesHolder"
+                                               ngf-change="changeAvatar($files, $event)"
+                                               ngf-multiple="false"
+                                               ngf-pattern="{{vm.acceptedFileTypes}}"
+                                               ngf-max-size="{{ vm.maxFileSize }}">
+                                                <localize key="user_changePhoto">Change photo</localize>
+                                            </a>                                           
+                                        </div>
+                                    </ng-form>
+                                </div>
+
+                                <!-- Actions -->
+                                <div style="margin-bottom: 20px;">                                   
+                                    <umb-button type="button"
+                                                button-style="info"
+                                                action="vm.toggleChangePassword()"
+                                                label="Change password"
+                                                label-key="general_changePassword"
+                                                state="changePasswordButtonState"
+                                                ng-if="vm.changePasswordModel.isChanging === false">
+                                    </umb-button>
+                                    <umb-button type="button"
+                                                action="logout()"
+                                                shortcut="ctrl+shift+l"
+                                                button-style="danger"
+                                                label="Log out"
+                                                label-key="general_logout">
+                                    </umb-button>
+
+                                    <ng-form ng-if="vm.changePasswordModel.isChanging" name="passwordForm" class="block-form" val-form-manager>
+
+                                        <change-password style="margin-top:10px;" password-values="vm.changePasswordModel.value"
+                                                         config="vm.changePasswordModel.config">
+                                        </change-password>
+
+                                        <umb-button type="button"
+                                                    action="vm.toggleChangePassword()"
+                                                    label="Cancel"
+                                                    label-key="general_cancel"
+                                                    button-style="cancel">
+                                        </umb-button>
+                                        <umb-button type="button"
+                                                    action="changePassword()"
+                                                    label-key="general_changePassword"
+                                                    state="changePasswordButtonState"
+                                                    button-style="success">
+                                        </umb-button>
+
+                                    </ng-form>
+
+                                    <div ng-if="vm.user.resetPasswordValue">
+                                        <p><br />Password reset to value: <strong>{{vm.user.resetPasswordValue}}</strong></p>
+                                    </div>
+
+                                </div>
+                                <div class="umb-control-group" ng-if="history.length > 1">
+                                    <h5><localize key="user_yourHistory" /></h5>
+                                    <ul class="umb-tree">
+                                        <li ng-repeat="item in history | orderBy:'time':true">
+                                            <a ng-href="{{item.link}}" ng-click="gotoHistory(item.link)" prevent-default>
+                                                <i class="{{item.icon}}"></i> {{item.name}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </umb-editor-container>
+
+            <umb-editor-footer>
+                <umb-editor-footer-content-right>
+                    <umb-button type="button"
+                                action="vm.save()"
+                                state="vm.page.saveButtonState"
+                                button-style="success"
+                                shortcut="ctrl+s"
+                                label="Save"
+                                label-key="buttons_save"
+                                disabled="vm.loading">
+                    </umb-button>
+                </umb-editor-footer-content-right>
+
+            </umb-editor-footer>
+
+        </umb-editor-view>
+
+    </form>
+</div>

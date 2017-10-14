@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en_us" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <creator>
+    <name>The Umbraco community</name>
+    <link>https://our.umbraco.org/documentation/Extending/Language-Files/Language-Files-For-Packages/</link>
+  </creator>
+  <area alias="profileEditor">
+    <key alias="DuplicateEmail">A user with the email already exists</key>
+    <key alias="DuplicateUserName">A user with the username already exists</key>
+    <key alias="DuplicateUserNameEmail">A user using this as their email already exists</key>   
+  </area>
+</language>

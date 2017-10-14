@@ -1,0 +1,6 @@
+﻿{
+	javascript: [
+		'~/App_Plugins/OurUmbraco.ProfileEditor/js/profileEditor.usercontroller.js',
+		'~/App_Plugins/OurUmbraco.ProfileEditor/js/profileEditor.resources.js'		
+	]
+}
